@@ -1,4 +1,5 @@
 ﻿// See https://aka.ms/new-console-template for more information
+using chatConsoleApp.Plugins;
 using DotNetEnv;
 
 using Microsoft.SemanticKernel;
@@ -21,6 +22,11 @@ var builder = Kernel.CreateBuilder()
 // カーネルをビルド
 Kernel kernel = builder.Build();
 var chatCompletionService = kernel.GetRequiredService<IChatCompletionService>();
+
+// プラグインを追加
+kernel.Plugins.AddFromType<DateTimePlugin>();
+
+
 
 // Toolを指定
 OpenAIPromptExecutionSettings openAIPromptExecutionSettings = new()
