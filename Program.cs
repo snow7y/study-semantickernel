@@ -22,11 +22,6 @@ var builder = Kernel.CreateBuilder()
 Kernel kernel = builder.Build();
 var chatCompletionService = kernel.GetRequiredService<IChatCompletionService>();
 
-// Toolを指定
-OpenAIPromptExecutionSettings openAIPromptExecutionSettings = new()
-{
-    ToolCallBehavior = ToolCallBehavior.AutoInvokeKernelFunctions
-};
 
 // チャット履歴を作成
 var history = new ChatHistory();
@@ -51,7 +46,6 @@ do
     // チャット履歴を使用して、エージェントのメッセージを取得
     var result = await chatCompletionService.GetChatMessageContentAsync(
         history,
-        executionSettings: openAIPromptExecutionSettings,
         kernel: kernel);
 
     // エージェントのメッセージを表示
