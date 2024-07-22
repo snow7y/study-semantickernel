@@ -37,6 +37,8 @@ OpenAIPromptExecutionSettings openAIPromptExecutionSettings = new()
 // チャット履歴を作成
 var history = new ChatHistory();
 
+
+
 // ユーザーの入力を受け取り、それに対する応答を生成
 string? userInput;
 do
