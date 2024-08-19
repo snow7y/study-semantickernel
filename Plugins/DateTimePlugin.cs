@@ -20,22 +20,31 @@ namespace chatConsoleApp.Plugins
             return DateTime.Now.Date.ToString("yyyy/MM/dd HH:mm:ss");
         }
 
-        // 指定されたタイムゾーンに基づいて現在の日時を取得するメソッド
-        [KernelFunction("get_current_datetime_by_country")]  // メソッドの名前
-        [Description("Get current date and time by country")]  // メソッドの説明
+        // タイムゾーンを直接指定して現在の日時を取得するメソッド
+        [KernelFunction("get_current_datetime_by_timezone")]  // メソッドの名前
+        [Description("Get the current date and time by time zone.")]  // メソッドの説明
         [return: Description("Return current date and time with formatting conventions of the current culture")]  // 戻り値の説明
-        public string GetDateTimeByCountry(
-            [Description("Time zone ID of the country from which you want to retrieve the date and time")] string timeZoneId)
+        public string GetDateTimeByTimeZone(
+            [Description("Time zone information from which you want to retrieve the date and time. The time zone to be entered should be the one used in. Example: `Asia/Tokyo` for `Tokyo Standard Time`.")] string timeZoneId)
         {
-            Console.WriteLine("Function_call: GetDateTimeByCountry");
+            Console.WriteLine("Function_call: GetDateTimeByTimeZone");
 
-            // 指定されたタイムゾーンで現在の日時を取得
-            var timeZone = TimeZoneInfo.GetSystemTimeZones().FirstOrDefault(x => x.Id.Contains(timeZoneId));
-            if (timeZone == null)
+            // string型のtimeZoneIdをTimeZoneInfoに変換
+            TimeZoneInfo timeZone;
+            try
             {
-                throw new ArgumentException($"Time zone '{timeZoneId}' not found.");
+                timeZone = TimeZoneInfo.FindSystemTimeZoneById(timeZoneId);
+            }
+            catch (TimeZoneNotFoundException)
+            {
+                return "Invalid time zone ID";
+            }
+            catch (InvalidTimeZoneException)
+            {
+                return "Invalid time zone";
             }
 
+            // 指定されたタイムゾーンで現在の日時を取得
             var dateTime = TimeZoneInfo.ConvertTime(DateTime.UtcNow, timeZone);
             return dateTime.ToString("yyyy/MM/dd HH:mm:ss");
         }
