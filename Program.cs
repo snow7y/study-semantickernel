@@ -10,13 +10,22 @@ using Microsoft.SemanticKernel.Connectors.OpenAI;
 Env.Load();
 
 // APIを利用するための設定
-var builder = Kernel.CreateBuilder()
-    .AddAzureOpenAIChatCompletion(
-        deploymentName: Env.GetString("YOUR_MODEL_ID"),
-        endpoint: Env.GetString("YOUR_ENDPOINT_NAME"),
-        apiKey: Env.GetString("API_KEY")
-        );
+// AzureOpenAIの場合
+// var builder = Kernel.CreateBuilder()
+//    .AddAzureOpenAIChatCompletion(
+//        deploymentName: Env.GetString("YOUR_MODEL_ID"),
+//        endpoint: Env.GetString("YOUR_ENDPOINT_NAME"),
+//        apiKey: Env.GetString("API_KEY")
+//        );
 
+// Geminiの場合
+#pragma warning disable SKEXP0070
+var builder = Kernel.CreateBuilder()
+    .AddGoogleAIGeminiChatCompletion(
+        modelId: "gemini-1.5-flash",
+        apiKey: Env.GetString("GEMINI_API_KEY")
+        );
+#pragma warning restore SKEXP0070
 
 
 // カーネルをビルド
@@ -64,6 +73,8 @@ do
     if (userInput == "/")
     {
         isHacker = true;
+        Console.WriteLine("Assistant > 私は猫としてふるまいます。");
+        continue;
 
     }
     
